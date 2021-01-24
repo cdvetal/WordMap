@@ -156,19 +156,19 @@ function draw() {
     strokeWeight(4);
     fill("edf6f9");
     stroke(0);
-    rect(3*windowWidth/4, 3*windowHeight/4, windowWidth/4, windowHeight/4);
+    rect(3*windowWidth/4, 2*windowHeight/3, windowWidth/4, windowHeight/3);
     strokeWeight(1);
     for (let i = 0; i < particles.length; i++) {
         let miniX = map(particles[i].x, minX, maxX, 0, windowWidth/4) + (3*windowWidth/4);
-        let miniY = map(particles[i].y, minY, maxY, 0, windowHeight/4) + (3*windowHeight/4);
+        let miniY = map(particles[i].y, minY, maxY, 0, windowHeight/3) + (2*windowHeight/3);
 
         point(miniX, miniY);
     }
 
     let miniWindowX = map(-currentX, minX, maxX, 0, windowWidth/4) + (3*windowWidth/4);
-    let miniWindowY = map(-currentY, minY, maxY, 0, windowHeight/4) + (3*windowHeight/4);
-    let miniWindowW = windowWidth / 20;
-    let miniWindowH = windowHeight / 20;
+    let miniWindowY = map(-currentY, minY, maxY, 0, windowHeight/3) + (2*windowHeight/3);
+    let miniWindowW = (windowWidth / (maxX - minX)) * windowWidth/4;
+    let miniWindowH = (windowHeight / (maxY - minY)) * windowHeight/3;
 
     noFill();
     rect(miniWindowX, miniWindowY, miniWindowW, miniWindowH);
@@ -182,8 +182,6 @@ function mousePressed() {
     // If so, keep track of relative location of click to corner of rectangle
     offsetX = currentX - mouseX;
     offsetY = currentY - mouseY;
-
-    print(mouseX, mouseY);
 }
 
 //After the mouse is released, the silly state is restored
