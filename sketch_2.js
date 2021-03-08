@@ -37,17 +37,15 @@ class Particle{
         let this_pos;
         let this_img;
 
-        if (color === 0) {
+        if (color === 0)
             this_img = this.image;
-        } else {
+        else
             this_img = this.image_color;
-        }
 
-        if (position === 0) {
+        if (position === 0)
             this_pos = this.pos;
-        } else {
+        else
             this_pos = this.pos_img;
-        }
 
         push();
         text(this.name, this_pos.x, this_pos.y - 20);
@@ -114,37 +112,36 @@ function draw() {
 
      // Adjust location if being dragged
      if (dragState) {
-         currentX = (mouseX + offsetX);
-         currentY = (mouseY + offsetY);
-     }
-
-     // Adjust location if being dragged
-     if (goTo) {
          currentX = mouseX + offsetX;
          currentY = mouseY + offsetY;
-         goTo = false;
      }
 
      cam.setPosition(-currentX, -currentY, 700 * sf);
 
-    for (let i = 0; i < particles.length; i++) {
+    for (let i = 0; i < particles.length; i++)
          particles[i].show();
-     }
 }
 
 function find() {
+    let multiplier;
     if (result.length > 0) {
         for (let i = 0; i < result.length - 1; i++) {
-            let splitString = split(result[i], ',');
+            let splitString;
+            if (position === 0) {
+                splitString = split(result[i], ',');
+                multiplier = 80;
+            } else {
+                splitString = split(result_img[i], ',');
+                multiplier = 0.6;
+            }
 
             let name = splitString[0];
-            let x = float(splitString[1]) * 80;
-            let y = float(splitString[2]) * 80;
+            let x = float(splitString[1]) * multiplier;
+            let y = float(splitString[2]) * multiplier;
 
             if (name === inputElem.value()){
-                offsetX = currentX - x;
-                offsetY = currentY - y;
-                goTo = true;
+                currentX = -x;
+                currentY = -y;
             }
         }
     }
@@ -169,6 +166,12 @@ function mousePressed() {
 //After the mouse is released, the silly state is restored
 function mouseReleased() {
     dragState = false;
+}
+
+function keyPressed(){
+    if (keyCode === RETURN) {
+        print(-currentX, -currentY);
+    }
 }
 
 window.addEventListener("wheel", function(e) {
