@@ -13,6 +13,13 @@ let maxX = -99999.0;
 let minY = 99999.0;
 let maxY = -99999.0;
 
+// Search
+let inputElem;
+let button;
+
+// Zoom
+let sf = 1; // scaleFactor
+
 class PopUp {
     constructor(x, y, name, image) {
         this.x = x;
@@ -44,7 +51,8 @@ class Particle{
         this.name = name;
         this.image = image;
 
-        this.visible = false;
+        // this.visible = false;
+        this.visible = true;
         this.pressed = false;
     }
 
@@ -52,34 +60,24 @@ class Particle{
         this.updated_x = this.x + currentX;
         this.updated_y = this.y + currentY;
 
-        if ((this.updated_x > -this.image.width && this.updated_x < windowWidth) && (this.updated_y > -this.image.height && this.updated_y < windowHeight)) {
-            this.visible = true;
+        if ((mouseX > this.updated_x && mouseX < this.updated_x + this.image.width) && (mouseY > this.updated_y && mouseY < this.updated_y+ this.image.height)){
+            this.pressed = true;
+            this.popUp = new PopUp(this.updated_x, this.updated_y, this.name, this.image);
         } else {
-            this.visible = false;
-        }
-
-        if(this.visible){
-            if ((mouseX > this.updated_x && mouseX < this.updated_x + this.image.width) && (mouseY > this.updated_y && mouseY < this.updated_y+ this.image.height)){
-                this.pressed = true;
-                this.popUp = new PopUp(this.updated_x, this.updated_y, this.name, this.image);
-            } else {
-                this.pressed = false;
-                this.popUp = null;
-            }
+            this.pressed = false;
+            this.popUp = null;
         }
     }
 
     show(){
-        if(this.visible){
-            if(this.pressed) {
-                this.popUp.show();
-            } else {
-                push();
-                translate(this.x, this.y);
-                // text(this.name, currentX, currentY - 20);
-                image(this.image, currentX, currentY);
-                pop();
-            }
+        if(this.pressed) {
+            this.popUp.show();
+        } else {
+            push();
+            translate(this.x, this.y);
+            // text(this.name, currentX, currentY - 20);
+            image(this.image, currentX, currentY);
+            pop();
         }
     }
 }
@@ -108,6 +106,7 @@ function setup() {
             let p = new Particle(x, y, name, img);
             particles.push(p);
 
+            // Calculate min and max values
             if (minX > x){
                 minX = x;
             }
@@ -122,10 +121,38 @@ function setup() {
             }
         }
 
+        // Round to int
         minX = floor(minX);
         maxX = ceil(maxX);
         minY = floor(minY);
         maxY = ceil(maxY);
+    }
+
+    // Create input element
+    /*
+    inputElem = createInput('');
+    inputElem.position(30, 60);
+
+    button = createButton('Search');
+    button.position(inputElem.x + inputElem.width, 60);
+    button.mousePressed(find);
+    */
+}
+
+function find() {
+    if (result.length > 0) {
+        for (let i = 0; i < result.length - 1; i++) {
+            let splitString = split(result[i], ',');
+
+            let name = splitString[0];
+            let x = float(splitString[1]) * 80;
+            let y = float(splitString[2]) * 80;
+
+            if (name === inputElem.value()){
+                currentX = x - windowWidth/2;
+                currentY = y - windowHeight/2;
+            }
+        }
     }
 }
 
@@ -138,6 +165,7 @@ function draw() {
         currentY = mouseY + offsetY;
     }
 
+    scale(sf);
     let pressed = [];
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
@@ -188,3 +216,10 @@ function mousePressed() {
 function mouseReleased() {
     dragState = false;
 }
+
+window.addEventListener("wheel", function(e) {
+    if (e.deltaY > 0)
+        sf *= 1.01;
+    else
+        sf *= 0.99;
+});
