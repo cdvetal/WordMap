@@ -91,11 +91,8 @@ class Particle{
                 this_pos = this.pos_img;
 
             push();
-            text(this.name, this_pos.x, this_pos.y - 20);
-            stroke(255, 0, 0);
-            noFill();
-            rect(this.pos.x, this.pos.y, this.image.width, this.image.height);
-            // image(this_img, this_pos.x, this_pos.y, 0);
+            text(this.name, this_pos.x, this_pos.y - 10);
+            image(this_img, this_pos.x, this_pos.y, 0);
             pop();
         }
     }
@@ -132,9 +129,6 @@ function setup() {
 
             let p = new Particle(x, y, x_img, y_img, name, img, img_c);
             particles.push(p);
-
-            if (i > 5)
-                break;
         }
     }
 
