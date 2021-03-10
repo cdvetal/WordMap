@@ -61,16 +61,16 @@ class Particle{
         this.updated_y = this.y + currentY;
 
         if ((mouseX > this.updated_x && mouseX < this.updated_x + this.image.width) && (mouseY > this.updated_y && mouseY < this.updated_y+ this.image.height)){
-            this.pressed = true;
+            this.hovered = true;
             this.popUp = new PopUp(this.updated_x, this.updated_y, this.name, this.image);
         } else {
-            this.pressed = false;
+            this.hovered = false;
             this.popUp = null;
         }
     }
 
     show(){
-        if(this.pressed) {
+        if(this.hovered) {
             this.popUp.show();
         } else {
             push();
