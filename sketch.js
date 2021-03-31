@@ -87,6 +87,7 @@ class Particle{
                 this_image = this.image_color;
 
             push();
+            text(this.name, this.updated_x, this.updated_y - 10);
             image(this_image, this.updated_x, this.updated_y);
             pop();
         }
